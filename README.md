@@ -51,8 +51,8 @@ with(data.frame(u = rnorm(10),
                 a = rnorm(10),
                 b = rnorm(10)
                 ),
-    list(summary(lm(u ~ a)),
-         summary(lm(u ~ b))
+     list(summary(lm(u ~ a)),
+          summary(lm(u ~ b))
          )
     )
 ```
