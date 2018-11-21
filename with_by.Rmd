@@ -1,0 +1,65 @@
+---
+title: "with & by in R"
+author: "Renard Bao"
+date: "2018年2月27日"
+output: 
+ html_document:
+  keep_md: true
+---
+
+with() & by() ,本篇記錄`with()`和`by()`的用法  
+
+###   <font color=#FFAA33 face = "Palatino Linotype">With</font>
+
+> The with( ) function applys an expression to a dataset. It is similar to DATA= in SAS.
+
+這是來自Quick-R一篇[Using with( ) and by( )](https://www.statmethods.net/stats/withby.html)中對with()
+用法的解釋,其功能和SAS中的`DATA=`相似.  
+可以透過在建立指定資料集內,運行R的函數(表達式).我覺得這樣挺方便的,因為當需要指派中繼變數來達到某種目的時,我可以透過`with()`創建資料集並且同時運行函數,而不用再多花記憶體為了創建資料集而指派中繼變數.
+
+####  **<font color=#77DDFF >參數</font>** 
+`with(data,expr,...)`
+
+####  **<font color=#77DDFF >例子:</font>**
+這邊用iris的資料集來作範例
+
+```{r}
+head(iris)
+with(iris, table(Species))
+```
+
+####  **<font color=#77DDFF >例子2:</font>**
+```{r}
+set.seed(1234)
+with(data.frame(u = rnorm(10),
+                a = rnorm(10),
+                b = rnorm(10)
+                ),
+     list(summary(lm(u ~ a)),
+          summary(lm(u ~ b))
+         )
+    )
+```
+
+###   <font color=#FFAA33 face = "Palatino Linotype">By</font>
+
+> The by( ) function applys a function to each level of a factor or factors. It is similar to BY processing in SAS.
+
+這也是Quick-R裡面所提到的,將資料透過factor的因子來運行所指定的函數,很像apply系列的函數.
+
+####  **<font color=#77DDFF >參數</font>** 
+`by(data,factorlist,function)`
+
+####  **<font color=#77DDFF >例子:</font>**
+這邊一樣用iris的資料集來作範例
+
+```{r}
+by(iris[, 1:2], iris["Species"], sum)
+
+```
+####  **<font color=#77DDFF >例子2:</font>**
+
+```{r}
+by(iris, iris["Species"],
+   function(x) lm(Sepal.Length ~ Sepal.Width, data = x))
+```
