@@ -1,0 +1,34 @@
+---
+title: "函數cor的參數--use"
+author: "包孟晨"
+date: "2018年8月14日"
+output: 
+  html_document:
+   theme: journal
+   keep_md: true
+---
+<style> p{line-height: 2em;}</style>
+這邊紀錄一下在做cor-test的時候對於參數use的用法差別。
+假如資料已經做過一些預處理，像是去掉NA值或是將NA值轉換等等，這樣有沒有use這個參數都沒甚麼關係了。use是當`cor`函數碰到物件裡面包含遺漏值時，我們要告訴它該怎麼辦。  
+use有以下參數:
+
+* `everything`:為default，有NA结果就全NA;
+* `all.obs`:有NA直接報錯； 
+* `complete.obs`:只考慮完整的部分，如果沒有完整的部分就報錯；
+* `na.or.complete`:只考慮完整的部分，如果沒有完整的部分给NA；
+* `pairwise.complete.obs`:考慮配對間完整的部分，如果沒有就報錯。
+
+```{r}
+set.seed(1234)
+test <- cbind(v1 = sample(1:1000,5)/1000,
+              v2 = sample(1:1000,5)/1000,
+              v3 = c(NA,NA,sample(1:1000,3)/1000))
+test
+cor(test)
+cor(test,use="complete.obs")
+cor(test,use="pairwise.complete.obs")
+cor(test[3:5,],use="complete.obs")
+
+```
+
+透過`cor(test[3:5,],use="complete.obs")`可以看到`complete.obs`是把有NA的整列剔除在計算相關性，所以如果要充分運用資料，盡量使用`pairwise.complete.obs`，當然能在資料預處理的時候先將NA值做最符合實際情況的處理當然是最好囉!
