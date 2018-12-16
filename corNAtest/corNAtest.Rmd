@@ -8,8 +8,9 @@ output:
    keep_md: true
 ---
 <style> p{line-height: 2em;}</style>
-這邊紀錄一下在做cor-test的時候對於參數use的用法差別。
-假如資料已經做過一些預處理，像是去掉NA值或是將NA值轉換等等，這樣有沒有use這個參數都沒甚麼關係了。use是當`cor`函數碰到物件裡面包含遺漏值時，我們要告訴它該怎麼辦。  
+以下紀錄在做cor-test時對於參數use的用法差別。  
+當`cor`函數的對象變數包含遺漏值時，use是用來告訴`cor`該怎麼處理遺漏值。  
+假如資料已經做過一些預處理，像是去掉NA值或是將NA值轉換等等，這樣有沒有use這個參數都沒甚麼關係了。  
 use有以下參數:
 
 * `everything`:為default，有NA结果就全NA;
@@ -31,4 +32,4 @@ cor(test[3:5,],use="complete.obs")
 
 ```
 
-透過`cor(test[3:5,],use="complete.obs")`可以看到`complete.obs`是把有NA的整列剔除在計算相關性，所以如果要充分運用資料，盡量使用`pairwise.complete.obs`，當然能在資料預處理的時候先將NA值做最符合實際情況的處理當然是最好囉!
+透過`cor(test[3:5,],use="complete.obs")`可以看到`complete.obs`是把有NA的整列剔除後再計算相關性，所以如果要充分運用資料，盡量使用`pairwise.complete.obs`，當然能在資料預處理的時候先將NA值做最符合實際情況的處理當然是最好囉!

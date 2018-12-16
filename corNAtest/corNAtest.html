@@ -129,7 +129,9 @@ $(document).ready(function () {
 
 
 <style> p{line-height: 2em;}</style>
-<p>這邊紀錄一下在做cor-test的時候對於參數use的用法差別。 假如資料已經做過一些預處理，像是去掉NA值或是將NA值轉換等等，這樣有沒有use這個參數都沒甚麼關係了。use是當<code>cor</code>函數碰到物件裡面包含遺漏值時，我們要告訴它該怎麼辦。<br />
+<p>以下紀錄在做cor-test時對於參數use的用法差別。<br />
+當<code>cor</code>函數的對象變數包含遺漏值時，use是用來告訴<code>cor</code>該怎麼處理遺漏值。<br />
+假如資料已經做過一些預處理，像是去掉NA值或是將NA值轉換等等，這樣有沒有use這個參數都沒甚麼關係了。<br />
 use有以下參數:</p>
 <ul>
 <li><code>everything</code>:為default，有NA结果就全NA;</li>
@@ -169,7 +171,7 @@ test</code></pre>
 ## v1  1.0000000  0.9999407 -0.5009671
 ## v2  0.9999407  1.0000000 -0.5103595
 ## v3 -0.5009671 -0.5103595  1.0000000</code></pre>
-<p>透過<code>cor(test[3:5,],use=&quot;complete.obs&quot;)</code>可以看到<code>complete.obs</code>是把有NA的整列剔除在計算相關性，所以如果要充分運用資料，盡量使用<code>pairwise.complete.obs</code>，當然能在資料預處理的時候先將NA值做最符合實際情況的處理當然是最好囉!</p>
+<p>透過<code>cor(test[3:5,],use=&quot;complete.obs&quot;)</code>可以看到<code>complete.obs</code>是把有NA的整列剔除後再計算相關性，所以如果要充分運用資料，盡量使用<code>pairwise.complete.obs</code>，當然能在資料預處理的時候先將NA值做最符合實際情況的處理當然是最好囉!</p>
 
 
 
