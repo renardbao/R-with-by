@@ -1,7 +1,7 @@
 ---
 title: "函數cor的參數--use"
-author: "包孟晨"
-date: "2018年8月14日"
+author: "RenardBao"
+date: "2018/8/14"
 output: 
   html_document:
    theme: journal
