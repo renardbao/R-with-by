@@ -1,0 +1,63 @@
+---
+title: "運用dplyr套件進行分組式的填補"
+author: "RenardBao"
+date: "2019/5/19"
+output: html_document
+---
+
+在R裡面能不要用迴圈就不要用迴圈，因為大部分的情況用迴圈都很慢...
+
+下面要展示的是如何利用dplyr這個套件先對資料做分組，再用ifelse進行向量式填補NA
+
+```{r}
+require(dplyr)
+require(magrittr)
+
+set.seed(1234)
+test_data <- data.frame(group = sample(c('a','b','c'),30000,replace = T),
+                       value = sample(c(NA,seq(1:100)),30000,replace = T))
+print(mean(test_data[which(test_data$group == 'a'),'value'],na.rm = T))
+print(mean(test_data[which(test_data$group == 'b'),'value'],na.rm = T))
+print(mean(test_data[which(test_data$group == 'c'),'value'],na.rm = T))
+
+```
+
+```{r }
+which(is.na(test_data$value) & test_data$group == 'a')[1]
+which(is.na(test_data$value) & test_data$group == 'b')[1]
+which(is.na(test_data$value) & test_data$group == 'c')[1]
+
+```
+
+```{r}
+testdata_dplyr <- test_data
+testdata_forin <- test_data
+system.time(
+testdata_dplyr <- testdata_dplyr %>% group_by(group) %>%
+       mutate(value = ifelse(is.na(value),
+                                   mean(value,na.rm = T),
+                                   value))
+)
+testdata_dplyr[168,]
+testdata_dplyr[208,]
+testdata_dplyr[116,]
+
+
+```
+
+```{r}
+system.time(
+for (i in 1:nrow(testdata_forin)){
+ if(is.na(testdata_forin$value[i])){
+   testdata_forin$value[i] <- as.integer(mean(testdata_forin$value[testdata_forin$group==testdata_forin$group[i]], na.rm=TRUE))
+ }
+}
+)
+testdata_dplyr[168,]
+testdata_dplyr[208,]
+testdata_dplyr[116,]
+
+```
+
+
+
