@@ -1,0 +1,86 @@
+---
+title: "為什麼在R裡你不該用迴圈"
+author: "RenardBao"
+date: "2019/8/5"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman   
+---
+
+## `ifelse()` `sapply()` `for()`
+
+今天要來比較一下在對向量做逐筆運算時哪個函數會比較快,先說結論:
+
+* 當對象是向量時我會推薦用`ifelse()`.
+* 當對象是array or matrix我會推薦用`apply()`.
+* 當對象是list則用`lapply()`或`sapply()`.
+* 當對象是data.frame的時候會推薦直接用data.table套件  (為什麼不推薦用`apply()`,`apply()`會在對象不是array or matrix的時候強制轉換成array,所以這過程中常常會出現預期外的BUG.....)
+
+## 資料導入
+
+這次要使用的數據是之前我分析寶可夢的數據資料.
+
+```{r data&package,include = F}
+library(stringr)
+library(magrittr)
+library(dplyr)
+
+pokemon <- read.table("pokemonname.txt",stringsAsFactors = F)[,1]
+pokemon[c(3:5,85)]
+```
+
+我要提取每隻寶可夢的名字,但是有些寶可夢名字包含了限定這個詞.
+
+```{r name}
+name <- str_split(pokemon,"\r\n")  %>% 
+  sapply("[",1) 
+
+name[c(3:5,85)]
+```
+
+## 方法
+
+我想到有三種方法(`for迴圈` `sapply()` `ifelse()`),以下分別表示出來並且計算程式運行時間.
+
+### for迴圈
+
+```{r forin}
+name1 <- name
+system.time({
+for(i in 1:length(name)){                      
+  if (str_detect(name[i],"限定"))  
+  name1[i] <- substr(name[i],start = 1 , stop = regexpr("\\(",name[i])-1) 
+}})                                         
+name1[c(3:5,85)]      
+```
+
+### sapply()
+
+```{r sapply}
+system.time({
+  
+name2 <- sapply(name,function(d){
+  if(str_detect(d,"限定")){
+    substr(d,start = 1 , stop = regexpr("\\(",d)-1)
+  }else{
+    d
+  }
+},USE.NAMES =F)
+})
+name2[c(3:5,85)]
+```
+
+### ifelse()
+
+```{r ifelse}
+system.time({
+  name3 <- ifelse(str_detect(name,"限定"),
+                  substr(name,start = 1 , stop = regexpr("\\(",name)-1),name)
+})
+name3[c(3:5,85)]
+```
+
+
+## 結論
+
+看看那ifelse那精美的時間,迴圈那可怕的數字.如果今天要處理的是上百萬筆資料,這時間差距絕對會讓人崩潰,所以在R裡面能用apply就用apply,對象是向量能用ifelse就用ifelse,絕對快上很多.
