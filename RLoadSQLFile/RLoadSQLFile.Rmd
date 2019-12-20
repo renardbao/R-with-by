@@ -39,7 +39,7 @@ YourObject <- sqlQuery(con,readr::read_file(SelectTemptableSQLFilePath,locale = 
 
 
 第一個查詢包含以下的SQL Code:  
-`SELECT * INTO #TEMPTABLE FROM TestTable`  
+`SELECT * INTO #TEMPTABLE FROM TestTable`    
 第二個查詢包含以下的SQL Code:  
 `SELECT * FROM #TEMPTABLE`
 
