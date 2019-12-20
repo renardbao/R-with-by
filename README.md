@@ -4,3 +4,4 @@
 3. [R-時間差函數difftime()](https://renardbao.github.io/Rnote/difftime/difftime.html)
 4. [運用dplyr套件進行分組式的填補--dplyr_group](https://renardbao.github.io/Rnote/dplyr_group/dplyr_group.html)
 5. [為什麼在R裡你不該用迴圈](https://renardbao.github.io/Rnote/not_use_forin_in_r/not_use_forin_in_r.html)
+6. [用R讀取複雜的SQL檔](https://renardbao.github.io/Rnote/RLoadSQLFile/RLoadSQLFile.html)
