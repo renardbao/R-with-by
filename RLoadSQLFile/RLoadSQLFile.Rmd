@@ -38,13 +38,13 @@ YourObject <- sqlQuery(con,readr::read_file(SelectTemptableSQLFilePath,locale = 
 ```
 
 
-第一個查詢包含以下的SQL Code:
-SELECT * INTO #TEMPTABLE FROM TestTable
-第二個查詢包含以下的SQL Code:
-SELECT * FROM #TEMPTABLE
+第一個查詢包含以下的SQL Code:  
+`SELECT * INTO #TEMPTABLE FROM TestTable`
+第二個查詢包含以下的SQL Code:  
+`SELECT * FROM #TEMPTABLE`
 
 這樣是不是很麻煩呢?
-其實你只需要在腳本最前面加上`SET NOCOUNT ON`，這樣SQL程序執行時就不會回傳筆數訊息，只會回傳最後的SELECT。因為SQL預設執行任何查詢都會回傳訊息，不管你是CREAT Temtable還是Insert into它都會回傳都執行了幾筆，只要把預設的回傳關掉就可以在同一個SQL腳本裡面運行多個複雜查詢，例如先建立Temptable再根據Temtable查詢。  
+其實你只需要在腳本最前面加上`SET NOCOUNT ON`，這樣SQL程序執行時就不會回傳筆數訊息，只會回傳最後的SELECT。因為SQL預設執行任何查詢都會回傳訊息，不管你是CREAT Temtable還是Insert into它都會回傳執行了幾筆，只要把預設的回傳關掉就可以在同一個SQL腳本裡面運行多個複雜查詢，例如先建立Temptable再根據Temtable查詢。    
 例如:
 
 ```{SQL,eval = F}

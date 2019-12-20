@@ -125,8 +125,10 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <a class="sourceLine" id="cb2-3" title="3"><span class="co">#select temp table</span></a>
 <a class="sourceLine" id="cb2-4" title="4">YourObject &lt;-<span class="st"> </span><span class="kw">sqlQuery</span>(con,readr<span class="op">::</span><span class="kw">read_file</span>(SelectTemptableSQLFilePath,<span class="dt">locale =</span> <span class="kw">locale</span>(<span class="dt">encoding =</span> <span class="st">&#39;BIG5&#39;</span>))) </a>
 <a class="sourceLine" id="cb2-5" title="5"><span class="co">#You have to run the above code at the same time.</span></a></code></pre></div>
-<p>第一個查詢包含以下的SQL Code: SELECT * INTO #TEMPTABLE FROM TestTable 第二個查詢包含以下的SQL Code: SELECT * FROM #TEMPTABLE</p>
-<p>這樣是不是很麻煩呢? 其實你只需要在腳本最前面加上<code>SET NOCOUNT ON</code>，這樣SQL程序執行時就不會回傳筆數訊息，只會回傳最後的SELECT。因為SQL預設執行任何查詢都會回傳訊息，不管你是CREAT Temtable還是Insert into它都會回傳都執行了幾筆，只要把預設的回傳關掉就可以在同一個SQL腳本裡面運行多個複雜查詢，例如先建立Temptable再根據Temtable查詢。<br />
+<p>第一個查詢包含以下的SQL Code:<br />
+<code>SELECT * INTO #TEMPTABLE FROM TestTable</code> 第二個查詢包含以下的SQL Code:<br />
+<code>SELECT * FROM #TEMPTABLE</code></p>
+<p>這樣是不是很麻煩呢? 其實你只需要在腳本最前面加上<code>SET NOCOUNT ON</code>，這樣SQL程序執行時就不會回傳筆數訊息，只會回傳最後的SELECT。因為SQL預設執行任何查詢都會回傳訊息，不管你是CREAT Temtable還是Insert into它都會回傳執行了幾筆，只要把預設的回傳關掉就可以在同一個SQL腳本裡面運行多個複雜查詢，例如先建立Temptable再根據Temtable查詢。<br />
 例如:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sql"><code class="sourceCode sql"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">SET</span> NOCOUNT <span class="kw">ON</span></a>
 <a class="sourceLine" id="cb3-2" title="2"></a>
