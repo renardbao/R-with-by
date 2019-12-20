@@ -1,0 +1,56 @@
+---
+title: "RLoadSQLFile"
+author: "RenardBao"
+date: "2019/12/19"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+# R讀取SQL檔
+
+直接用R call SQL檔的方式，運用readr::read_file將SQL讀入。
+
+```{r loaddb,eval=F}
+library(RODBC)
+library(readr)
+con <- odbcDriverConnect('yourconnection') 
+#or
+con <- odbcConnect(dsn,uid,pwd) 
+
+YourObject <- sqlQuery(con,readr::read_file(SQLFilePath,locale = locale(encoding = 'BIG5'))) 
+
+odbcClose(con)
+```
+
+# 複雜查詢的SQL檔
+
+在R裡面要查詢SQL一次它只會回傳一個查詢，並不像在SQL裡面可以先建立暫存表或是Function再進行查詢一次到位。你必須一個查詢一個sqlQuery，例如你如果要先建立暫存表再查詢，那你就得將其分開寫兩個sql檔，並同時在一個session分別運行兩次sqlQuery。  
+例如:
+
+```{r sql_example,eval=F}
+
+#build temp table
+sqlQuery(con,readr::read_file(TemptableSQLFilePath,locale = locale(encoding = 'BIG5')))
+#select temp table
+YourObject <- sqlQuery(con,readr::read_file(SelectTemptableSQLFilePath,locale = locale(encoding = 'BIG5'))) 
+#You have to run the above code at the same time.
+```
+
+
+第一個查詢包含以下的SQL Code:
+SELECT * INTO #TEMPTABLE FROM TestTable
+第二個查詢包含以下的SQL Code:
+SELECT * FROM #TEMPTABLE
+
+這樣是不是很麻煩呢?
+其實你只需要在腳本最前面加上`SET NOCOUNT ON`，這樣SQL程序執行時就不會回傳筆數訊息，只會回傳最後的SELECT。因為SQL預設執行任何查詢都會回傳訊息，不管你是CREAT Temtable還是Insert into它都會回傳都執行了幾筆，只要把預設的回傳關掉就可以在同一個SQL腳本裡面運行多個複雜查詢，例如先建立Temptable再根據Temtable查詢。  
+例如:
+
+```{SQL,eval = F}
+SET NOCOUNT ON
+
+SELECT * INTO #TEMPTABLE FROM DATAMINING..ATABLE
+
+SELECT * FROM #TEMPTABLE
+```
