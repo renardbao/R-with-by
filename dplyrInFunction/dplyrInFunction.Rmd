@@ -1,0 +1,61 @@
+---
+title: "dplyrInFunction"
+author: "RenardBao"
+date: "2019/12/19"
+output: 
+  prettydoc::html_pretty:
+    theme: cayman
+---
+
+# 在自訂函數裡使用dplyr
+
+dplyr套件裡我們常用的函數，例如`select`,`group_by`,`summarise`,`mutate`等等，但是這些函數的參數不吃字串，那這樣問題就來拉！    
+如果我要在function裡面require(dplyr)並使用到它的函數呢?那這樣我在function接收到的參數不就很難餵給dplyr的函數了嗎? 因此，有了`select_at`,`group_by_at`,`summarise_at`,`mutate_at`解決這問題，其參數可以接受以character形式輸入。  
+這些函數都有一個共通參數`.vars`,這個參數就支援以character向量方式使用。`.funs`則是針對這些變數要用甚麼function。`filter`也有`filter_at`函數，不過它的用途比較常拿來用在大量column需要相同篩選。例如有volue結尾的column都篩掉小於40之類的。  
+例如:
+
+```{r .vars,message = F}
+library(magrittr)
+library(dplyr)
+#select_at
+iris %>% 
+  select_at(.vars = c('Sepal.Length','Species')) %>%  
+  head()
+#summaris_at
+iris %>% 
+  group_by_at(.vars = c('Species')) %>% 
+  summarise_at(.vars = c('Sepal.Length_test' = 'Sepal.Length'),
+               .funs = mean)
+#mutate_at single
+iris %>%
+  mutate_at(.vars = c('A' = 'Sepal.Length'),
+            .funs = c(function(x){x * 10})) %>%
+  head()
+#mutate_at multiple
+iris %>%
+  mutate_at(.vars = c('A' = 'Sepal.Length',
+                      'B' = 'Petal.Length'),
+            .funs = c('*10' = function(x){x * 10},
+                      '+100' = function(x){x + 100})) %>%
+  head()
+```
+
+
+或者是你直接用base套件寫一個也是可以，例如:
+
+```{r base}
+test <- iris
+#select
+test[,c('Sepal.Length','Species')] %>%  
+  head()
+#mutate
+test[,'A']<- test[,'Sepal.Length'] * 10
+head(test)
+#group & summarise
+#tapply:
+tapply(test[,'Petal.Width'],test[,'Species'], sum)
+#split:
+test %>% split(test[,'Species']) %>% 
+  sapply(function(x) mean(x[,'Petal.Width']) )
+
+```
